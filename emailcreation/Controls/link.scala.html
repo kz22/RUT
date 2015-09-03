@@ -1,0 +1,61 @@
+@(args:Any)(implicit content:Html = null)
+@import views.html.Controls._
+
+
+@{
+	var tag:String = "";
+	
+	var text:String = "";
+	var css:String = "";
+	var item:Tuple2[String,Any] = null;
+	var title:String = "";
+	var defaultStyle:String = "any style that you want";
+
+	var navigateUrl:String = "";
+	
+	if (content != null){
+		text = content.body;
+	}
+	
+	if (args.isInstanceOf[Tuple2[String,Any]] 
+		&& args.asInstanceOf[Tuple2[String,Any]]._1.isInstanceOf[String]  
+		&& args.asInstanceOf[Tuple2[String,Any]]._2.isInstanceOf[String]) {
+		item = args.asInstanceOf[Tuple2[String,Any]];
+		if (item._1 == "css") { css += " " + item._2; }
+		else if (item._1 == "title") { tag += " title=\"" + item._2 + "\""; }
+		else if (item._1 == "navigateUrl") { navigateUrl = item._2.asInstanceOf[String]; }
+		else if (item._1 == "style") { defaultStyle += item._2.asInstanceOf[String]; }
+		else { tag += " " + item._1 + "=\"" + item._2 + "\""; }
+	}
+	else if (args.isInstanceOf[Product]) {
+		for(value <- args.asInstanceOf[Product].productIterator.toList) {
+			if (value.isInstanceOf[Tuple2[String,Any]]) {
+				item = value.asInstanceOf[Tuple2[String,Any]];
+				
+				if (item._1 == "css") { css += " " + item._2; }
+				else if (item._1 == "title") { tag += " title=\"" + item._2 + "\""; }
+				else if (item._1 == "navigateUrl") { navigateUrl = item._2.asInstanceOf[String]; }
+				else if (item._1 == "style") { defaultStyle += item._2.asInstanceOf[String]; }
+				else { tag += " " + item._1 + "=\"" + item._2 + "\""; }
+				
+				item = null;
+			} else if (value.isInstanceOf[String]) {
+				text += value.asInstanceOf[String];
+			} else if (value.isInstanceOf[play.api.templates.Html]) { // if we have another "template" html then we will get compiled body of that template
+				text += value.asInstanceOf[play.api.templates.Html].body;
+			} else if (value.isInstanceOf[scala.xml.Elem]) {
+				text += value.asInstanceOf[scala.xml.Elem].toString();
+			}
+		}
+	} else if (args.isInstanceOf[String]) {
+		text += args.asInstanceOf[String];
+	} else if (args.isInstanceOf[play.api.templates.Html]) { // if we have another "template" html then we will get compiled body of that template
+		text += args.asInstanceOf[play.api.templates.Html].body;
+	} else if (args.isInstanceOf[scala.xml.Elem]) {
+		text += args.asInstanceOf[scala.xml.Elem].toString();
+	}
+	
+	tag = "<a " + tag + " class=\"link " + css + "\" href=\""+ navigateUrl +"\" style=\""+defaultStyle+"\" title=\"" + title + "\">" + text + "</a>";
+	
+	Html(tag)
+}

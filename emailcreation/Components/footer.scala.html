@@ -1,0 +1,12 @@
+@(data:Map[String, String])
+@import views.html.Controls._
+@import views.html.Components._
+
+@panel("css"->"footer","style"->"any style that you want"){
+     @paragraph() {
+      @link("Terms", "navigateUrl"->"http://")
+       |
+       @link("Privacy", "navigateUrl"->"http://")
+       | © Copyright 
+   }
+}

@@ -1,0 +1,16 @@
+@(data:Map[String, String])
+@import views.html.Controls._
+@import views.html.Components._
+@panel("css"->"body","style"->"any style that you want"){
+	@image("source"->"http://", "alt"->"image")
+	@head("Hi "+data.get("name"))
+	@paragraph("isLead"->true){
+		@data.get("openingline")
+	}
+	@paragraph(){@data.get("issuerInfo") @data.get("issuingOrg")}
+	@panel("style"->"any style that you want"){
+		 @paragraph("isLead"->true){@data.get("calloutLead")}
+		 @paragraph(){@data.get("calloutPara")}
+		 @button(data.get("buttonName"), "navigateUrl"->"http://")
+	}
+}
