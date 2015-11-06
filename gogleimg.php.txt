@@ -1,14 +1,6 @@
 
 <?php
 
-$dbhost = 'mysql3.000webhost.com';
-
-$dbuser = 'a4621564_a4mov';
-
-$dbpass = 'a4movies';
-
-$conn = mysql_connect($dbhost, $dbuser, $dbpass);
-
 function get_url_contents($url) {
  
   $crl = curl_init();
@@ -28,33 +20,11 @@ function get_url_contents($url) {
  
   return $ret;
 }
-$sql = 'SELECT pos, title, director, year, country, genre FROM movies';
-mysql_select_db('movies');
 
-
-$retval = mysql_query( $sql, $conn );
-
-for ($x = 0; $x <= 1000; $x++) {
- $x = intval($_GET['x']);
-
- $sql = "SELECT Title FROM movies WHERE ID=$x";
-
- $result = $mysqli->query("SELECT Title FROM movies WHERE ID=('$x')");
-
- $url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' . $result;
- 
+ $url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' . $x;
 $json = get_url_contents($url);
- 
 $data = json_decode($url);
- 
-
 $data = mysql_real_escape_string($data);
- 
-$sql = 'Update movies Set poster=$data where id=$x';
-
-}
-
-mysql_close($conn);
 
 ?>
 	
